@@ -1,0 +1,155 @@
+starting project-----------------------------------------------------------------------------
+
+# onto terminal
+django-admin startproject exemplo
+django-admin startproject exemplo .
+
+# create an app
+python manage.py startapp parameter_name_example
+
+#create database based on DATABASE variable
+python manage.py migrate
+
+#run app and indicate IP
+python manage.py runserver
+
+#stop server
+ctrl C
+
+# create superuser to log in the app
+python manage.py createsuperuser
+
+# see everything created in models inside app and creates a file in migrations
+python manage.py makemigrations
+
+# apply the created migration inside the database. verify every new aquisition
+python manage.py migrate
+
+settings-------------------------------------------------------------------------------------
+BASE_DIR: saves the path to this project in your OS
+SECRET_KEY: security string
+DEBUG: (True or False) show or not informations for helping while debuging
+ALLOWED_HOST = []: list of allowed domains
+INSTALLED_APPS: obvious
+MIDDLEWARE: django stuff
+ROOT_URLCONF: string which points to your URL config
+TEMPLATES: obvious
+DATABASES: data configuration
+AUTH_PASSWORD_VALIDATIONS: validation algorithms 
+LANGUAGE_CODE: language ex:'en-us'
+TIME_ZONE: obvious ex: 'UTC'
+STATIC_URL: path to static variables
+
+admin----------------------------------------------------------------------------------------
+#registers an applied model
+admin.site.register(model_name)
+
+urls.py--------------------------------------------------------------------------------------
+# group of path to be wrote down with IP Ex: http://127.0.0.1:8000/admin
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+]
+
+app files------------------------------------------------------------------------------------
+when you create a app you need to add in INSTALLED_APPS like a string with ","
+
+views----------------------------------------------------------------------------------------
+# simple example
+from django.http import HttpResponse
+import datetime
+
+def current_datetime(request):
+    now = datetime.datetime.now()
+    html = "<html><body>It is now %s.</body></html>" % now
+    return HttpResponse(html)
+# when this is created you can associte with a path in urls inside your aplication like
+from app.views import current_datatime
+
+urlpatterns = [
+    path('path_example/', current_datatime),
+]
+
+template-------------------------------------------------------------------------------------
+render is a way to take information from a html file instead of a variable
+from django.shortcuts import render
+def render(request, template_name, context=None, content_type=None, status=None, using=None):
+
+'''
+django already assumes you have a folder called "templates" inside the correpondent app and,
+inside, a folder with the name of the app
+'''
+# inside the folder with the name of the app creates your templates using html html:5[press tab]
+Ex:
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Seja bem vindo</h1># information input
+</body>
+</html>
+
+htmls
+<ul></ul> : deixa com Tab como se fosse um paragrafo
+<li></li> : representa em forma de listagem
+<h#></h#> where # is a number : define o tamanho da fonte
+<button type="submit">button_name</button> : cria um botao do tipo indicado
+<form method="POST"></form> :Az define o metodo de interacao
+{{from.as_p}} : as_p e uma facilidade da calsse de form que organiza cada campo em paragrafo
+<a href=link>link_view</a> : faz aparecer na view um link indicado por link
+<a href="{% url 'url_nova' %}"></a> forma de exibir uma url dinamicamente, uma url nomeada em urls
+<a href="{% url 'url_update' outra_variavel %}"> : util em caso de update ou quando se tem que colocar um link com variaveis
+models---------------------------------------------------------------------------------------
+# a way to organize and store information(model is a row and field is a column)
+
+# To create a model you must create a model in models.py inside your app
+Ex:
+class Categoria(models.Model):
+    nome = models.CharField(max_length=100)
+    dt_criacao = models.DateTimeField(auto_now_add=True)
+
+#after that you must create a related migration file and them apply (see manage.py)
+
+CRUD-----------------------------------------------------------------------------------------
+
+
+----write----
+# using a form
+# creates form.py in app folder and do as the following:
+Ex:
+from django.forms import ModelForm
+from .models import Transacao
+
+
+class TransacaoForm(ModelForm):
+ class Meta:
+  model = Transacao
+  fields = ['data', 'descricao', 'valor', 'observacoes', 'categoria']
+
+# after that creates in views as the following
+Ex:
+def nova_transacao(request):
+ form = TransacaoForm(request.POST or None)
+
+ return render(request, 'contas/form.html', {'form': form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
